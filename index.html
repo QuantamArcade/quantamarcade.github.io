@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Files</h2>
+<ul id="file-list"></ul>
+
+<script>
+const username = "QuantamArcade";
+const repoName = "quantamarcade.github.io";
+const directoryPath = "g"; // "" if root
+
+// GitHub API endpoint for directory listing
+const apiURL = `https://api.github.com/repos/${username}/${repoName}/contents/${directoryPath}`;
+
+fetch(apiURL)
+  .then(res => res.json())
+  .then(items => {
+    const ul = document.getElementById("file-list");
+
+    items.forEach(item => {
+      if (item.type === "file") {
+        const li = document.createElement("li");
+        
+        // Build GitHub Pages URL
+        const pagesURL = `https://${username}.github.io/${repoName}/${directoryPath ? directoryPath + '/' : ''}${item.name}`;
+
+        li.innerHTML = `<a href="${pagesURL}" target="_blank">${item.name}</a>`;
+        ul.appendChild(li);
+      }
+    });
+  })
+  .catch(err => {
+    document.getElementById("file-list").innerHTML = "Error loading files.";
+    console.error(err);
+  });
+</script>
+</body>
+</html>
