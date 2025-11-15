@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <body>
-<h2>Files</h2>
+<h2>Files in /g</h2>
 <ul id="file-list"></ul>
 
 <script>
 const username = "QuantamArcade";
-const repoName = "quantamarcade.github.com";
-const directoryPath = "g"; // "" if root
+const repoName = "quantamarcade.github.io";
+const directoryPath = "g";
 
-// GitHub API endpoint for directory listing
+// GitHub API endpoint to list directory contents
 const apiURL = `https://api.github.com/repos/${username}/${repoName}/contents/${directoryPath}`;
 
 fetch(apiURL)
@@ -20,9 +20,9 @@ fetch(apiURL)
     items.forEach(item => {
       if (item.type === "file") {
         const li = document.createElement("li");
-        
+
         // Build GitHub Pages URL
-        const pagesURL = `https://${username}.github.io/${repoName}/${directoryPath ? directoryPath + '/' : ''}${item.name}`;
+        const pagesURL = `https://${username}.github.io/${directoryPath}/${item.name}`;
 
         li.innerHTML = `<a href="${pagesURL}" target="_blank">${item.name}</a>`;
         ul.appendChild(li);
