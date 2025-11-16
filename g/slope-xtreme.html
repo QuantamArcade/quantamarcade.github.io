@@ -26,9 +26,44 @@
             height: 100%;
             border: none;
         }
+
+        /* Improved close button */
+        .close-wrapper {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 6px;
+            padding: 4px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            transition: background 0.2s ease, transform 0.15s ease;
+            text-decoration: none;   /* FIXES BLUE/PURPLE UNDERLINE */
+            color: inherit;          /* Prevents link color override */
+        }
+
+        .close-wrapper:hover {
+            background: rgba(0, 0, 0, 0.75);
+            transform: scale(1.08);
+        }
+
+        .close-btn {
+            font-size: 22px;
+            line-height: 1;
+            color: #fff;
+            text-decoration: none; 
+        }
     </style>
 </head>
 <body>
+
+    <a href="/" class="close-wrapper">
+        <span class="close-btn">✕</span>
+    </a>
+
     <div class="game-container">
         <iframe 
             class="game-frame" 
