@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Browser | QuantamArcade</title>
+    <title>Game Browser | QuantamArcade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,172 +13,352 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #8e2de2;
+            --secondary: #4a00e0;
+            --accent: #00c6ff;
+            --dark: #121212;
+            --light: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-hover: rgba(255, 255, 255, 0.15);
+        }
+        
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #fff;
+            background: linear-gradient(135deg, var(--dark), #1a1a2e, #16213e);
+            color: var(--light);
             min-height: 100vh;
             padding: 20px;
+            background-attachment: fixed;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
         
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 40px 0 30px;
             margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 198, 255, 0.3);
         }
         
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            color: #ccc;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: var(--card-bg);
+            padding: 12px 25px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stat-icon {
+            color: var(--accent);
         }
         
         .search-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
         .search-box {
             display: flex;
             width: 100%;
-            max-width: 500px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             border-radius: 50px;
             overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
         
         .search-input {
             flex: 1;
-            padding: 15px 20px;
+            padding: 18px 25px;
             border: none;
             outline: none;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.95);
+            font-size: 1.1rem;
+            background: transparent;
+            color: var(--light);
+        }
+        
+        .search-input::placeholder {
+            color: #aaa;
         }
         
         .search-button {
-            padding: 0 25px;
-            background: #4a00e0;
+            padding: 0 30px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            font-size: 1.1rem;
         }
         
         .search-button:hover {
-            background: #8e2de2;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            transform: scale(1.05);
         }
         
-        .file-grid {
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            background: var(--card-bg);
+            color: var(--light);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            transform: translateY(-2px);
+        }
+        
+        .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
             margin-top: 20px;
         }
         
-        .file-card {
-            background: rgba(255, 255, 255, 0.1);
+        .game-card {
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .file-card:hover {
-            transform: translateY(-5px);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
         }
         
-        .file-icon {
-            font-size: 2.5rem;
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: var(--card-hover);
+        }
+        
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+            text-align: center;
+        }
+        
+        .game-name {
+            font-size: 1.4rem;
             margin-bottom: 15px;
-            color: #8e2de2;
+            text-align: center;
+            flex-grow: 1;
         }
         
-        .file-name {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            word-break: break-word;
-        }
-        
-        .file-link {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 15px;
-            background: rgba(255, 255, 255, 0.2);
+        .game-link {
+            display: block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: background 0.3s;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         
-        .file-link:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .game-link:hover {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(142, 45, 226, 0.4);
         }
         
         .no-results {
             text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
+            padding: 60px 40px;
+            font-size: 1.4rem;
             grid-column: 1 / -1;
+            background: var(--card-bg);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--accent);
         }
         
         .loading {
             text-align: center;
-            padding: 30px;
-            font-size: 1.2rem;
+            padding: 60px;
+            font-size: 1.4rem;
             grid-column: 1 / -1;
+        }
+        
+        .loading-spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid var(--accent);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .error {
             text-align: center;
-            padding: 30px;
-            font-size: 1.2rem;
+            padding: 60px 40px;
+            font-size: 1.4rem;
             color: #ff6b6b;
             grid-column: 1 / -1;
+            background: var(--card-bg);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
         
         footer {
             text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            font-size: 0.9rem;
+            margin-top: 70px;
+            padding: 30px;
+            font-size: 1rem;
             opacity: 0.7;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(to right, #ff8a00, #ff2070);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
         
         @media (max-width: 768px) {
-            .file-grid {
+            .game-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                gap: 15px;
+            }
+            
+            .stat-item {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
         
         @media (max-width: 480px) {
-            .file-grid {
+            .game-grid {
                 grid-template-columns: 1fr;
             }
             
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+            
+            .search-input {
+                border-radius: 15px 15px 0 0;
+            }
+            
+            .search-button {
+                border-radius: 0 0 15px 15px;
+                padding: 15px;
             }
         }
     </style>
@@ -185,27 +366,54 @@
 <body>
     <div class="container">
         <header>
-            <h1>File Browser</h1>
-            <p class="subtitle">Browse and search files from QuantamArcade's repository</p>
+            <div class="logo">
+                <i class="fas fa-gamepad logo-icon"></i>
+            </div>
+            <h1>QuantamArcade</h1>
+            <p class="subtitle">Discover and play amazing web games from our collection</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-gamepad stat-icon"></i>
+                    <span id="total-games">Loading...</span> Games
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-search stat-icon"></i>
+                    Instant Search
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-rocket stat-icon"></i>
+                    Fast Loading
+                </div>
+            </div>
         </header>
         
         <div class="search-container">
             <div class="search-box">
-                <input type="text" class="search-input" id="search-input" placeholder="Search files...">
+                <input type="text" class="search-input" id="search-input" placeholder="Search for games...">
                 <button class="search-button" id="search-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <i class="fas fa-search"></i> Search
                 </button>
             </div>
         </div>
         
-        <div class="file-grid" id="file-list">
-            <div class="loading">Loading files...</div>
+        <div class="controls">
+            <button class="filter-btn active" data-filter="all">All Games</button>
+            <button class="filter-btn" data-filter="action">Action</button>
+            <button class="filter-btn" data-filter="puzzle">Puzzle</button>
+            <button class="filter-btn" data-filter="arcade">Arcade</button>
+            <button class="filter-btn" data-filter="strategy">Strategy</button>
+        </div>
+        
+        <div class="game-grid" id="game-list">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading games...</p>
+            </div>
         </div>
         
         <footer>
-            <p>Powered by GitHub Pages | QuantamArcade</p>
+            <p>Powered by GitHub Pages | QuantamArcade Game Collection</p>
         </footer>
     </div>
 
@@ -224,19 +432,62 @@
         // Set search input value if there's a query
         document.getElementById('search-input').value = searchQuery;
         
+        // Game categories (for demonstration)
+        const gameCategories = {
+            'action': ['shooter', 'fight', 'battle', 'war', 'combat'],
+            'puzzle': ['puzzle', 'match', 'solve', 'brain', 'logic'],
+            'arcade': ['arcade', 'classic', 'retro', 'space', 'jump'],
+            'strategy': ['strategy', 'tower', 'defense', 'chess', 'plan']
+        };
+        
         // Function to remove .html extension from filename
         function removeHtmlExtension(filename) {
             return filename.replace(/\.html$/, '');
         }
         
-        // Function to filter files based on search query
-        function filterFiles(files, query) {
-            if (!query) return files;
+        // Function to determine game category
+        function getGameCategory(gameName) {
+            const name = gameName.toLowerCase();
+            for (const [category, keywords] of Object.entries(gameCategories)) {
+                if (keywords.some(keyword => name.includes(keyword))) {
+                    return category;
+                }
+            }
+            return 'other';
+        }
+        
+        // Function to get a game icon based on category
+        function getGameIcon(category) {
+            const icons = {
+                'action': 'fa-explosion',
+                'puzzle': 'fa-puzzle-piece',
+                'arcade': 'fa-joystick',
+                'strategy': 'fa-chess',
+                'other': 'fa-gamepad'
+            };
+            return icons[category] || icons['other'];
+        }
+        
+        // Function to filter games based on search query and category
+        function filterGames(games, query, category) {
+            let filteredGames = games;
             
-            const lowerQuery = query.toLowerCase();
-            return files.filter(file => 
-                removeHtmlExtension(file.name).toLowerCase().includes(lowerQuery)
-            );
+            // Filter by search query
+            if (query) {
+                const lowerQuery = query.toLowerCase();
+                filteredGames = filteredGames.filter(game => 
+                    removeHtmlExtension(game.name).toLowerCase().includes(lowerQuery)
+                );
+            }
+            
+            // Filter by category
+            if (category && category !== 'all') {
+                filteredGames = filteredGames.filter(game => 
+                    getGameCategory(removeHtmlExtension(game.name)) === category
+                );
+            }
+            
+            return filteredGames;
         }
         
         // Function to update URL with search query
@@ -251,50 +502,61 @@
         // Function to perform search
         function performSearch() {
             const query = document.getElementById('search-input').value.trim();
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
             updateURL(query);
-            displayFiles(allFiles, query);
+            displayGames(allGames, query, activeFilter);
         }
         
-        // Function to display files
-        function displayFiles(files, query = '') {
-            const fileList = document.getElementById('file-list');
-            const filteredFiles = filterFiles(files, query);
+        // Function to display games
+        function displayGames(games, query = '', category = 'all') {
+            const gameList = document.getElementById('game-list');
+            const filteredGames = filterGames(games, query, category);
             
-            if (filteredFiles.length === 0) {
-                fileList.innerHTML = `
+            // Update total games count
+            document.getElementById('total-games').textContent = filteredGames.length;
+            
+            if (filteredGames.length === 0) {
+                gameList.innerHTML = `
                     <div class="no-results">
-                        <p>No files found${query ? ` matching "${query}"` : ''}.</p>
+                        <i class="fas fa-search"></i>
+                        <p>No games found${query ? ` matching "${query}"` : ''}${category !== 'all' ? ` in ${category} category` : ''}.</p>
+                        <p style="margin-top: 15px; font-size: 1rem;">Try a different search term or category.</p>
                     </div>
                 `;
                 return;
             }
             
-            fileList.innerHTML = filteredFiles.map(file => {
-                const displayName = removeHtmlExtension(file.name);
+            gameList.innerHTML = filteredGames.map(game => {
+                const displayName = removeHtmlExtension(game.name);
+                const gameCategory = getGameCategory(displayName);
+                const gameIcon = getGameIcon(gameCategory);
                 const pagesURL = `https://${username}.github.io/${directoryPath}/${displayName}`;
                 
+                // Mark some games as featured (for demo purposes)
+                const isFeatured = Math.random() > 0.7;
+                
                 return `
-                    <div class="file-card">
-                        <div class="file-icon">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#8e2de2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M14 2V8H20" stroke="#8e2de2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M16 13H8" stroke="#8e2de2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M16 17H8" stroke="#8e2de2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M10 9H9H8" stroke="#8e2de2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                    <div class="game-card" data-category="${gameCategory}">
+                        ${isFeatured ? '<div class="featured-badge">FEATURED</div>' : ''}
+                        <div class="game-icon">
+                            <i class="fas ${gameIcon}"></i>
                         </div>
-                        <h3 class="file-name">${displayName}</h3>
-                        <a href="${pagesURL}" class="file-link" target="_blank">Open File</a>
+                        <h3 class="game-name">${displayName}</h3>
+                        <div class="game-meta">
+                            <span class="game-category">${gameCategory.toUpperCase()}</span>
+                        </div>
+                        <a href="${pagesURL}" class="game-link" target="_blank">
+                            <i class="fas fa-play"></i> Play Now
+                        </a>
                     </div>
                 `;
             }).join('');
         }
         
-        // Store all files for filtering
-        let allFiles = [];
+        // Store all games for filtering
+        let allGames = [];
         
-        // Fetch files from GitHub API
+        // Fetch games from GitHub API
         fetch(apiURL)
             .then(res => {
                 if (!res.ok) {
@@ -303,14 +565,15 @@
                 return res.json();
             })
             .then(items => {
-                allFiles = items.filter(item => item.type === "file");
-                displayFiles(allFiles, searchQuery);
+                allGames = items.filter(item => item.type === "file");
+                displayGames(allGames, searchQuery, 'all');
             })
             .catch(err => {
-                document.getElementById('file-list').innerHTML = `
+                document.getElementById('game-list').innerHTML = `
                     <div class="error">
-                        <p>Error loading files. Please try again later.</p>
-                        <p style="margin-top: 10px; font-size: 0.9rem;">${err.message}</p>
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                        <p>Error loading games. Please try again later.</p>
+                        <p style="margin-top: 10px; font-size: 1rem;">${err.message}</p>
                     </div>
                 `;
                 console.error(err);
@@ -332,6 +595,15 @@
             searchTimeout = setTimeout(() => {
                 performSearch();
             }, 300);
+        });
+        
+        // Category filter buttons
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                performSearch();
+            });
         });
     </script>
 </body>
